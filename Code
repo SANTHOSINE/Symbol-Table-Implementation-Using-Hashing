@@ -1,0 +1,65 @@
+# Symbol Table Implementation using Hashing
+# SDG 4: Quality Education
+
+class Symbol:
+    def __init__(self, name, type_):
+        self.name = name
+        self.type = type_
+
+class SymbolTable:
+    def __init__(self, size=10):
+        self.size = size
+        self.table = [[] for _ in range(size)]
+
+    def hash_func(self, name):
+        return sum(ord(c) for c in name) % self.size
+
+    def insert(self, name, type_):
+        key = self.hash_func(name)
+        for symbol in self.table[key]:
+            if symbol.name == name:
+                print(f"{name} already exists! Updating type to {type_}")
+                symbol.type = type_
+                return
+        self.table[key].append(Symbol(name, type_))
+        print(f"Inserted ({name}, {type_}) at index {key}")
+
+    def search(self, name):
+        key = self.hash_func(name)
+        for symbol in self.table[key]:
+            if symbol.name == name:
+                print(f"Found {name} of type {symbol.type} at index {key}")
+                return
+        print(f"{name} not found!")
+
+    def display(self):
+        print("\n--- Symbol Table ---")
+        for i, symbols in enumerate(self.table):
+            print(f"Index {i}:", end=" ")
+            for symbol in symbols:
+                print(f"[{symbol.name}, {symbol.type}]", end=" -> ")
+            print()
+        print("--------------------")
+
+def main():
+    st = SymbolTable()
+    while True:
+        print("\n1. Insert\n2. Search\n3. Display\n4. Exit")
+        choice = input("Enter your choice: ")
+        if choice == '1':
+            name = input("Enter symbol name: ")
+            type_ = input("Enter symbol type: ")
+            st.insert(name, type_)
+        elif choice == '2':
+            name = input("Enter symbol name to search: ")
+            st.search(name)
+        elif choice == '3':
+            st.display()
+        elif choice == '4':
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice!")
+
+if __name__ == "__main__":
+    main()
